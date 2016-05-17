@@ -1,0 +1,6 @@
+#!/bin/bash
+
+set -e # exit immediately if a simple command exits with a non-zero status
+set -u # report the usage of uninitialized variables
+
+tar zxvf ${BOSH_COMPILE_TARGET}/openjdk/openjdk-1.8.0_73-x86_64-trusty.tar.gz -C ${BOSH_INSTALL_TARGET}

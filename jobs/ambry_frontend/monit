@@ -1,0 +1,5 @@
+check process ambry_frontend
+  with pidfile /var/vcap/sys/run/ambry_frontend/ambry_frontend.pid
+  start program "/var/vcap/jobs/ambry_frontend/bin/ambry_frontend_ctl start"
+  stop program "/var/vcap/jobs/ambry_frontend/bin/ambry_frontend_ctl stop"
+  group vcap

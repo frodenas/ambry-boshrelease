@@ -1,0 +1,19 @@
+---
+name: ambry_frontend
+
+packages:
+  - ambry
+  - openjdk
+
+templates:
+  ambry_frontend_ctl: bin/ambry_frontend_ctl
+  hardware_layout.json: config/hardware_layout.json
+  frontend.properties: config/frontend.properties
+  log4j.properties: config/log4j.properties
+  partition_layout.json: config/partition_layout.json
+
+consumes:
+  - name: server
+    type: ambry
+
+properties: {}

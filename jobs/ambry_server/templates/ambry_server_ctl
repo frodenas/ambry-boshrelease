@@ -1,0 +1,43 @@
+#!/bin/bash
+
+set -e # exit immediately if a simple command exits with a non-zero status
+set -u # report the usage of uninitialized variables
+
+source /var/vcap/packages/ambry/utils.sh
+
+RUN_DIR=/var/vcap/sys/run/ambry_server
+LOG_DIR=/var/vcap/sys/log/ambry_server
+TMP_DIR=/var/vcap/sys/tmp/ambry_server
+STORE_DIR=/var/vcap/store/ambry_server
+mkdir -p ${RUN_DIR} ${LOG_DIR} ${TMP_DIR} ${STORE_DIR}
+
+PIDFILE=${RUN_DIR}/ambry_server.pid
+
+export JAVA_HOME=/var/vcap/packages/openjdk
+export PATH=/var/vcap/packages/openjdk/bin:$PATH
+
+case $1 in
+  start)
+    pid_guard ${PIDFILE} "ambry_server"
+    echo $$ > ${PIDFILE}
+
+    exec /var/vcap/packages/openjdk/bin/java \
+      -Dlog4j.configuration=file:/var/vcap/jobs/ambry_server/config/log4j.properties \
+      -jar /var/vcap/packages/ambry/ambry.jar \
+      --hardwareLayoutFilePath /var/vcap/jobs/ambry_server/config/hardware_layout.json \
+      --partitionLayoutFilePath /var/vcap/jobs/ambry_server/config/partition_layout.json \
+      --serverPropsFilePath /var/vcap/jobs/ambry_server/config/server.properties \
+      >>  ${LOG_DIR}/ambry_server.stdout.log \
+      2>> ${LOG_DIR}/ambry_server.stderr.log
+    ;;
+
+  stop)
+    kill_and_wait ${PIDFILE}
+    ;;
+
+  *)
+    echo "Usage: $0 {start|stop}"
+    ;;
+
+esac
+exit 0

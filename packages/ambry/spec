@@ -1,0 +1,9 @@
+---
+name: ambry
+
+dependencies:
+  - openjdk
+
+files:
+  - common/utils.sh
+  - ambry/**/*

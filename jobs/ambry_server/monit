@@ -1,0 +1,5 @@
+check process ambry_server
+  with pidfile /var/vcap/sys/run/ambry_server/ambry_server.pid
+  start program "/var/vcap/jobs/ambry_server/bin/ambry_server_ctl start"
+  stop program "/var/vcap/jobs/ambry_server/bin/ambry_server_ctl stop"
+  group vcap

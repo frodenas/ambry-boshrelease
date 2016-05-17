@@ -1,0 +1,25 @@
+{
+    "clusterName": "<%= p('cluster_name') %>",
+    "version": 99,
+    "datacenters": [
+        {
+            "dataNodes": [
+                <% link('server').instances.each do |instance| %>
+                {
+                    "disks": [
+                        {
+                            "capacityInBytes": 21474836480,
+                            "hardwareState": "AVAILABLE",
+                            "mountPath": "/var/vcap/store/ambry_server"
+                        }
+                    ],
+                    "hardwareState": "AVAILABLE",
+                    "hostname": "<%= instance.address %>",
+                    "port": <%= p('port') %>,
+                }
+                <% end %>
+            ],
+            "name": "<%= spec.name %>_<%= spec.az %>"
+        }
+    ]
+}

@@ -1,0 +1,32 @@
+---
+name: ambry_server
+
+packages:
+  - ambry
+  - openjdk
+
+templates:
+  ambry_server_ctl: bin/ambry_server_ctl
+  hardware_layout.json: config/hardware_layout.json
+  log4j.properties: config/log4j.properties
+  partition_layout.json: config/partition_layout.json
+  server.properties: config/server.properties
+
+provides:
+  - name: server
+    type: ambry
+    properties:
+      - cluster_name
+      - port
+
+consumes:
+  - name: server
+    type: ambry
+
+properties:
+  cluster_name:
+    description: "Name of the cluster"
+    default: "Ambry Cluster"
+  port:
+    description: "The port to listen and accept connections on"
+    default: 6667

@@ -1,0 +1,3 @@
+[submodule "src/ambry"]
+	path = src/ambry
+	url = https://github.com/linkedin/ambry.git

@@ -1,0 +1,44 @@
+#!/bin/bash
+
+set -e # exit immediately if a simple command exits with a non-zero status
+set -u # report the usage of uninitialized variables
+
+source /var/vcap/packages/ambry/utils.sh
+
+RUN_DIR=/var/vcap/sys/run/ambry_frontend
+LOG_DIR=/var/vcap/sys/log/ambry_frontend
+TMP_DIR=/var/vcap/sys/tmp/ambry_frontend
+STORE_DIR=/var/vcap/store/ambry_frontend
+mkdir -p ${RUN_DIR} ${LOG_DIR} ${TMP_DIR} ${STORE_DIR}
+
+PIDFILE=${RUN_DIR}/ambry_frontend.pid
+
+export JAVA_HOME=/var/vcap/packages/openjdk
+export PATH=/var/vcap/packages/openjdk/bin:$PATH
+
+case $1 in
+  start)
+    pid_guard ${PIDFILE} "ambry_frontend"
+    echo $$ > ${PIDFILE}
+
+    exec /var/vcap/packages/openjdk/bin/java \
+      -Dlog4j.configuration=file:/var/vcap/jobs/ambry_frontend/config/log4j.properties \
+      -cp /var/vcap/packages/ambry/ambry.jar \
+      com.github.ambry.frontend.AmbryFrontendMain \
+      --hardwareLayoutFilePath /var/vcap/jobs/ambry_frontend/config/hardware_layout.json \
+      --partitionLayoutFilePath /var/vcap/jobs/ambry_frontend/config/partition_layout.json \
+      --serverPropsFilePath /var/vcap/jobs/ambry_frontend/config/frontend.properties \
+      >>  ${LOG_DIR}/ambry_frontend.stdout.log \
+      2>> ${LOG_DIR}/ambry_frontend.stderr.log
+    ;;
+
+  stop)
+    kill_and_wait ${PIDFILE}
+    ;;
+
+  *)
+    echo "Usage: $0 {start|stop}"
+    ;;
+
+esac
+exit 0

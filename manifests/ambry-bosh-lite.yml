@@ -1,0 +1,48 @@
+---
+name: ambry
+director_uuid: CHANGE-ME
+
+releases:
+  - name: ambry
+    version: latest
+
+stemcells:
+  - alias: default
+    os: ubuntu-trusty
+    version: latest
+
+update:
+  canaries: 1
+  max_in_flight: 32
+  canary_watch_time: 1000-100000
+  update_watch_time: 1000-100000
+  serial: false
+
+instance_groups:
+  - name: ambry_server
+    instances: 1
+    jobs:
+      - name: ambry_server
+        release: ambry
+    vm_type: default
+    stemcell: default
+    persistent_disk_type: default
+    azs:
+      - default
+    networks:
+      - name: default
+
+  - name: ambry_frontend
+    instances: 1
+    jobs:
+      - name: ambry_frontend
+        release: ambry
+    vm_type: default
+    stemcell: default
+    persistent_disk_type: default
+    azs:
+      - default
+    networks:
+      - name: default
+
+properties: {}
